@@ -29,34 +29,37 @@ void ofxMtlWatchFolder::allowExt(const string& ext)
 //--------------------------------------------------------------
 void ofxMtlWatchFolder::start(const string& path, unsigned checkInterval, unsigned sizeInterval)
 {
-    if (isThreadRunning()) {
-        stopThread();
-    }
-    
-    _watchPath = path;
-    _checkInterval = checkInterval;
-    _sizeInterval = sizeInterval;
-    
-    _watchDir.listDir(_watchPath);
+	if (isThreadRunning()) {
+		stopThread();
+	}
+
+	_watchPath = path;
+	_checkInterval = checkInterval;
+	_sizeInterval = sizeInterval;
+
+	_watchDir.listDir(_watchPath);
 	_watchDir.sort();
-    
+
 	// allocate one entry per file in the map
-    _watchFiles.clear();
-    for (int i = 0; i < _watchDir.size(); i++) {
-		
-		_watchFiles[_watchDir.getName(i) ] = ofxMtlWatchFile();
-		
-        _watchFiles[_watchDir.getName(i)].done = false;
-        _watchFiles[_watchDir.getName(i)].flag = false;
+	_watchFiles.clear();
+	for (int i = 0; i < _watchDir.size(); i++) {
+
+		_watchFiles[_watchDir.getName(i)] = ofxMtlWatchFile();
+
+		_watchFiles[_watchDir.getName(i)].done = false;
+		_watchFiles[_watchDir.getName(i)].flag = false;
+		if (_watchDir.getFile(i).isFile())
+		{
 #ifdef TARGET_OSX
-        _watchFiles[_watchDir.getName(i)].size = ofFile(_watchDir.getPath(i)).getSize();
+			_watchFiles[_watchDir.getName(i)].size = ofFile(_watchDir.getPath(i)).getSize();
 #else
-        _watchFiles[_watchDir.getName(i)].size = _watchDir.getFile(i).getSize();
+			_watchFiles[_watchDir.getName(i)].size = _watchDir.getFile(i).getSize();
 #endif
-        _watchFiles[_watchDir.getName(i)].time = ofGetElapsedTimeMillis();
-    }
-    
-    startThread(false);
+			_watchFiles[_watchDir.getName(i)].time = ofGetElapsedTimeMillis();
+		}
+	}
+
+	startThread(false);
 }
 
 //--------------------------------------------------------------
