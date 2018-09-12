@@ -18,6 +18,8 @@ ofxMtlWatchFolder::ofxMtlWatchFolder()
 ofxMtlWatchFolder::~ofxMtlWatchFolder()
 {
     ofRemoveListener(ofEvents().update, this, &ofxMtlWatchFolder::update);
+	stop();
+	waitForThread(false);
 }
 
 //--------------------------------------------------------------
